@@ -1,8 +1,7 @@
 use volatile::Volatile;
-use core::fmt::{self, Write};
+use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
-
 
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
@@ -141,16 +140,19 @@ lazy_static! {  //使用laze_static! 和 spin::Mutex声明一个全局可变的W
     });
 }
 
-/*pub fn print_something() {
-    let mut writer = Writer {
-        column_position : 0,
-        color_code : ColorCode::new(Color::Green, Color::Red),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
+#[test_case]
+fn test_println_output() {
+    use crate::{serial_print, serial_println};
+    
+    serial_print!("test_println_output...");
 
-    writer.write_byte(b'H');
-    writer.write_string("ello ");
-    writer.write_string("world!");
-    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
-} */
+    let s = "test something print!";
+    println!("{}",s);
+    for (i, c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character), c);
+    }
+
+    serial_println!("[ok]");
+}
 

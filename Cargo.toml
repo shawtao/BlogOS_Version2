@@ -14,6 +14,7 @@ bootloader = "0.9.3"
 volatile = "0.2.6"
 spin = "0.9.0"
 x86_64 = "0.14.3"
+uart_16550 = "0.2.0"
 
 [dependencies.lazy_static]
 version = "1.0"
@@ -30,5 +31,6 @@ panic = "abort"
 runner = "bootimage runner"
 
 [package.metadata.bootimage]
-test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04"]
+test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio"]
+test-success-exit-code = 33
 
