@@ -3,6 +3,7 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(OSTrain::test_runner)]
 #![reexport_test_harness_main = "test_main"]
+#![feature(asm)]
 
 use OSTrain::println;
 use core::panic::PanicInfo;
@@ -26,6 +27,9 @@ pub extern "C" fn _start() -> ! {
     //vga_buffer::print_something();
     println!("Hello World{}", "!");
 
+    OSTrain::interrupts::init_idt();
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
 
@@ -36,7 +40,6 @@ pub extern "C" fn _start() -> ! {
 #[cfg(test)]
 pub mod test {
 
-    use crate::*;
     use OSTrain::{serial_println,serial_print};
 
     #[test_case]
